@@ -1,0 +1,25 @@
+service: apipilot-backend
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  timeout: 100 # optional, in seconds, default is 6
+  versionFunctions: false
+  lambdaHashingVersion: 20201221
+  region: ap-southeast-2
+  stage: ${opt:stage, 'dev'}
+
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'cognito-idp:*'
+      Resource: '*'
+
+functions:
+  - ${file(src/routes/auth.yml)}
+  - ${file(src/routes/chatgpt.yml)}
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
